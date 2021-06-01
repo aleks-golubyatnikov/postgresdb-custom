@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    env:production  
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+      env: production
+  strategy:
+    type: Recreate 
+  template: 
+    metadata: 
+      labels: 
+        app: postgres
+        env: production
+    spec: 
+      containers:
+        - name: postgres
+          image: postgres:latest
+          env:
+            - name: POSTGRES_PASSWORD
+              value: 1Qaz2Wsx
+          ports:
+            - containerPort: 5432
+              name: postgres    
+          volumeMounts:
+            - name: postgres-persistent-storage
+              mountPath: /var/lib/postgresql/data    
+      volumes: 
+        - name: postgres-persistent-storage
+          persistentVolumeClaim:
+            claimName: postgresql-pvc
+        
