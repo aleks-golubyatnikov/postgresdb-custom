@@ -3,15 +3,13 @@ kind: Deployment
 metadata:
   name: postgres
   labels:
-    env:production  
+    env: production  
 spec: 
   replicas: 1
   selector:
     matchLabels:
       app: postgres
       env: production
-  strategy:
-    type: Recreate 
   template: 
     metadata: 
       labels: 
@@ -24,12 +22,11 @@ spec:
           env:
             - name: POSTGRES_PASSWORD
               value: 1Qaz2Wsx
-          ports:
-            - containerPort: 5432
-              name: postgres    
+            - name: PGDATA
+              value: /var/lib/postgresql/data/postgresql-01
           volumeMounts:
             - name: postgres-persistent-storage
-              mountPath: /var/lib/postgresql/data    
+              mountPath: /var/lib/postgresql/data/    
       volumes: 
         - name: postgres-persistent-storage
           persistentVolumeClaim:
